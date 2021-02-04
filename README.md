@@ -1,6 +1,19 @@
 # electron-csv-parser
 barebones csv parser running electron and electron-packager
 
+### pre-reqs
+```
+node 14.15.4
+```
+
+### config.json
+```
+{
+  "inputCsv": "src/data/demo.csv",
+  "outputCsv": "out.csv"
+}
+```
+
 ### Ubuntu 20.04 & Linux Mint 20 pre-reqs
 ```
 sudo apt install libgtk-3-0
