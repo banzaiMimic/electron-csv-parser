@@ -1,0 +1,4 @@
+{
+  "inputCsv": "src/data/demo.csv",
+  "outputCsv": "out.csv"
+}

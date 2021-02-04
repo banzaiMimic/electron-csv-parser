@@ -1,10 +1,18 @@
 const Excel = require('exceljs')
+const fs = require('fs');
+const path = require('path');
+
+let rawdata = fs.readFileSync(path.resolve(__dirname, 'config.json'))
+let config = JSON.parse(rawdata)
+console.log(config)
+const { inputCsv, outputCsv } = config
 
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split('')
 
-const writeCsv = ({headers, objArr, output}) => {
+const writeCsv = ({headers, objArr}) => {
+  
   console.log('writing csv:', {
-    headers, objArr, output
+    headers, objArr, outputCsv
   })
   let workbook = new Excel.Workbook()
   try {
@@ -23,7 +31,7 @@ const writeCsv = ({headers, objArr, output}) => {
   } catch(e) {
     console.error(e)
   }
-  return workbook.xlsx.writeFile(output)
+  return workbook.xlsx.writeFile(outputCsv)
 }
 
 const parseCsv = file => {
@@ -37,7 +45,7 @@ const parseCsv = file => {
     return workbook.csv.readFile( file )
     .then((worksheet) => {
       worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-        
+
         if (rowNumber === 1) {
           parseHeaders(row.values)
         } else {
@@ -60,11 +68,10 @@ const parseCsv = file => {
 }
 
 const main = async() => {
-  const csvData = await parseCsv('src/data/demo.csv')
+  const csvData = await parseCsv( inputCsv )
   let done = await writeCsv( {
     headers: csvData.headers, 
-    objArr: csvData.objArr, 
-    output: 'tt1.csv'
+    objArr: csvData.objArr
   })
   //window.close()
 }
