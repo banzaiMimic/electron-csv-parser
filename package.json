@@ -12,5 +12,9 @@
   "devDependencies": {
     "electron": "^11.2.1",
     "electron-packager": "^15.2.0"
+  },
+  "dependencies": {
+    "csv-parse": "^4.15.1",
+    "exceljs": "^4.2.0"
   }
 }

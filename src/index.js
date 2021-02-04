@@ -1,9 +1,8 @@
 const { app } = require('electron')
+const parseCsv = require('./parseCsv')
 
-const runTest = () => {
-  console.log('runTest...')
-}
-
-app.whenReady().then(runTest())
+app.whenReady().then(
+  parseCsv(app)
+)
 
 process.exit(0)
