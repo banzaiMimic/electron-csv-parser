@@ -1,5 +1,5 @@
 # electron-csv-parser
-barebones csv parser running electron
+barebones csv parser running electron and electron-packager
 
 ### Ubuntu 20.04 & Linux Mint 20 pre-reqs
 ```
