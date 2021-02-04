@@ -1,5 +1,7 @@
 const Excel = require('exceljs')
 
+const ALPHABET = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split('')
+
 const parseHeader = r => {
   let returnObj = []
   const keys = Object.keys(r)
@@ -15,10 +17,10 @@ const writeCsv = ({headers, objArr, output}) => {
   try {
     let worksheet = workbook.addWorksheet('Worksheet')
     headers.map( (key, idx) => {
-      worksheet.getCell(`A${idx}`).value = key
-      console.log(`setting cell A${idx} value to ${key}`)
-      worksheet.getCell('B'+idx).value = 'test'
-      console.log(`setting cell B${idx} value to test`)
+      const cell = `${ALPHABET[idx]}1`
+      console.log('cell is :', cell)
+      worksheet.getCell(cell).value = key
+      console.log(`setting cell ${cell} value to ${key}`)
     })
   } catch(e) {
     console.error(e)
