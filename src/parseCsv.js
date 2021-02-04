@@ -2,15 +2,6 @@ const Excel = require('exceljs')
 
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split('')
 
-const parseHeader = r => {
-  let returnObj = []
-  const keys = Object.keys(r)
-  keys.map( k => {
-    returnObj.push(k)
-  })
-  return returnObj
-}
-
 const writeCsv = ({headers, objArr, output}) => {
   console.log('creating csv to :', output)
   let workbook = new Excel.Workbook()
@@ -63,11 +54,12 @@ const parseCsv = file => {
 
 const main = async() => {
   const csvData = await parseCsv('src/data/demo.csv')
-  writeCsv( {
+  let done = await writeCsv( {
     headers: csvData.headers, 
     objArr: csvData.objArr, 
     output: 'tt1.csv'
   })
+  //window.close()
 }
 
 main()

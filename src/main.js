@@ -3,7 +3,7 @@ const path = require('path')
 
 let mainWindow
 
-function createWindow () {
+const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
