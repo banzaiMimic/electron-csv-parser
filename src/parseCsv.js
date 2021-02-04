@@ -3,15 +3,22 @@ const Excel = require('exceljs')
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split('')
 
 const writeCsv = ({headers, objArr, output}) => {
-  console.log('creating csv to :', output)
+  console.log('writing csv:', {
+    headers, objArr, output
+  })
   let workbook = new Excel.Workbook()
   try {
     let worksheet = workbook.addWorksheet('Worksheet')
     headers.map( (key, idx) => {
-      const cell = `${ALPHABET[idx]}1`
-      console.log('cell is :', cell)
-      worksheet.getCell(cell).value = key
-      console.log(`setting cell ${cell} value to ${key}`)
+      const cellAlpha = `${ALPHABET[idx]}`
+      worksheet.getCell(`${cellAlpha}1`).value = key
+    })
+
+    objArr.map( (doc, rowIdx) => {
+      headers.map( (k, idx) => {
+        const cellAlpha = `${ALPHABET[idx]}`
+        worksheet.getCell(`${cellAlpha}${rowIdx + 2}`).value = doc[k]
+      })
     })
   } catch(e) {
     console.error(e)
@@ -23,14 +30,16 @@ const parseCsv = file => {
   let workbook = new Excel.Workbook()
   let headers = []
   let objArr = []
+  const parseHeaders = values => {
+    headers = Object.assign([], values)
+  }
   try {
     return workbook.csv.readFile( file )
     .then((worksheet) => {
       worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-        console.log("Row " + rowNumber + " = " + JSON.stringify(row.values))
         
         if (rowNumber === 1) {
-          headers = Object.assign([], row.values)
+          parseHeaders(row.values)
         } else {
           let newObj = {}
           row.values.map( (v, idx) => {
@@ -40,8 +49,6 @@ const parseCsv = file => {
         }
       })
       headers.shift()
-      console.log('headers:', headers)
-      console.log('objArr:', objArr)
       return {
         headers,
         objArr
