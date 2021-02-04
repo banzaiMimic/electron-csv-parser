@@ -2,7 +2,7 @@ const Excel = require('exceljs')
 const fs = require('fs');
 const path = require('path');
 
-let rawdata = fs.readFileSync(path.resolve(__dirname, 'config.json'))
+let rawdata = fs.readFileSync(path.resolve(__dirname, '../config.json'))
 let config = JSON.parse(rawdata)
 console.log(config)
 const { inputCsv, outputCsv } = config
