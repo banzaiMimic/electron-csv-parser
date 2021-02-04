@@ -1,26 +1,24 @@
-const fs = require('fs')
-const parse = require('csv-parse/lib/sync')
 const Excel = require('exceljs')
 
 const parseHeader = r => {
+  let returnObj = []
   const keys = Object.keys(r)
-  return keys.map( k => {
-    return {
-      id: k.toLowerCase(),
-      title: k
-    }
+  keys.map( k => {
+    returnObj.push(k)
   })
+  return returnObj
 }
 
-const createCsv = ({header, objArr, output}) => {
+const writeCsv = ({headers, objArr, output}) => {
   console.log('creating csv to :', output)
   let workbook = new Excel.Workbook()
   try {
-    let keys = Object.keys(header)
     let worksheet = workbook.addWorksheet('Worksheet')
-    keys.map( (key, idx) => {
+    headers.map( (key, idx) => {
       worksheet.getCell(`A${idx}`).value = key
-      //worksheet.getCell('B'+idx).value = resultMap[key]
+      console.log(`setting cell A${idx} value to ${key}`)
+      worksheet.getCell('B'+idx).value = 'test'
+      console.log(`setting cell B${idx} value to test`)
     })
   } catch(e) {
     console.error(e)
@@ -28,39 +26,46 @@ const createCsv = ({header, objArr, output}) => {
   return workbook.xlsx.writeFile(output)
 }
 
-const parseCsv = async(app) => {
+const parseCsv = file => {
+  let workbook = new Excel.Workbook()
+  let headers = []
+  let objArr = []
   try {
-    let objArr = []
-    let header = []
-    const output = `${app.getAppPath()}/tt1.xlsx`
-    const filePath = `${__dirname}/data/demo.csv`
-    let rawdata = fs.readFileSync( filePath )
-    
-    const records = parse(rawdata, {
-      columns: true,
-      skip_empty_lines: true
-    })
-
-    records.map((r,idx) => {
-      if (idx === 0) {
-        header = parseHeader(r)
+    return workbook.csv.readFile( file )
+    .then((worksheet) => {
+      worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+        console.log("Row " + rowNumber + " = " + JSON.stringify(row.values))
+        
+        if (rowNumber === 1) {
+          headers = Object.assign([], row.values)
+        } else {
+          let newObj = {}
+          row.values.map( (v, idx) => {
+            newObj[headers[idx]] = v
+          })
+          objArr.push(newObj)
+        }
+      })
+      headers.shift()
+      console.log('headers:', headers)
+      console.log('objArr:', objArr)
+      return {
+        headers,
+        objArr
       }
-      console.log(r)
-      objArr.push(r)
     })
-
-    console.log('objArr:', objArr)
-    console.log('header:', header)
-
-    createCsv({
-      header, 
-      objArr, 
-      output
-    })
-
   } catch(e) {
     console.error(e)
   }
 }
 
-module.exports = parseCsv
+const main = async() => {
+  const csvData = await parseCsv('src/data/demo.csv')
+  writeCsv( {
+    headers: csvData.headers, 
+    objArr: csvData.objArr, 
+    output: 'tt1.csv'
+  })
+}
+
+main()

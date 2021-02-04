@@ -2,7 +2,7 @@
   "name": "electron-csv-parser",
   "version": "1.0.0",
   "description": "csv parser boilerplate using electron",
-  "main": "src/index.js",
+  "main": "src/main.js",
   "repository": "git@github.com:dr-mimic/electron-csv-parser.git",
   "license": "MIT",
   "scripts": {
@@ -14,7 +14,6 @@
     "electron-packager": "^15.2.0"
   },
   "dependencies": {
-    "csv-parse": "^4.15.1",
     "exceljs": "^4.2.0"
   }
 }
